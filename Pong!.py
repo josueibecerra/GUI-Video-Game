@@ -3,6 +3,10 @@ import random
 import time
 
 
+counter = 0
+counter1 = 0
+
+
 root = tk.Tk()
 root.title('Pong!')
 root.resizable(0, 0)
@@ -37,8 +41,10 @@ class Ball:
         if position[3] >= self.canvas_height:
             self.y = -3
         if position[0] <= 0:
+            self.score(True)
             self.x = 3
         if position[2] >= self.canvas_width:
+            self.score(False)
             self.x = -3
         if self.hit_paddle(position) == True:
             self.x = 3
@@ -59,6 +65,21 @@ class Ball:
                 return True
             return False
 
+    def score(self, value):
+        global counter
+        global counter1
+
+        if value == True:
+            a = self.canvas.create_text(125, 40, text=counter, font=('Arial', 60), fill='white')
+            canvas.itemconfig(a, fill='black')
+            counter += 1
+            a = canvas.create_text(125, 40, text=counter, font=('Arial', 60), fill='white')
+
+        if value == False:
+            a = self.canvas.create_text(375, 40, text=counter1, font=('Arial', 60), fill='white')
+            canvas.itemconfig(a, fill='black')
+            counter += 1
+            a = canvas.create_text(375, 40, text=counter1, font=('Arial', 60), fill='white')
 
 class Paddle:
     def __init__(self, canvas, color):
