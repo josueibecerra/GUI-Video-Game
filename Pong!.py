@@ -20,7 +20,7 @@ canvas.create_line(250, 0, 250, 400, fill='white')
 
 
 class Ball:
-    def __init__(self, canvas, color, paddle, paddle1):
+    def __init__(self, canvas, color):
         self.canvas = canvas
         self.paddle = paddle
         self.paddle1 = paddle1
@@ -33,6 +33,20 @@ class Ball:
         self.canvas_height = self.canvas.winfo_height()
         self.canvas_width = self.canvas.winfo_width()
 
+    def hit_paddle(self, position):
+        paddle_position = self.canvas.coords(self.paddle.id)
+        if position[1] >= paddle_position[1] and position[1] <= paddle_position[3]:
+            if position[0] >= paddle_position[0] and position[0] <= paddle_position[2]:
+                return True
+            return False
+
+    def hit_paddle1(self, position):
+        paddle_position = self.canvas.coords(self.paddle1.id)
+        if position[1] >= paddle_position[1] and position[1] <= paddle_position[3]:
+            if position[0] >= paddle_position[0] and position[2] <= paddle_position[2]:
+                return True
+            return False
+
     def draw(self):
         self.canvas.move(self.id, self.x, self.y)
         position = self.canvas.coords(self.id)
@@ -41,45 +55,32 @@ class Ball:
         if position[3] >= self.canvas_height:
             self.y = -3
         if position[0] <= 0:
-            self.score(True)
+            self.score(False)
             self.x = 3
         if position[2] >= self.canvas_width:
-            self.score(False)
+            self.score(True)
             self.x = -3
-        if self.hit_paddle(position) == True:
+        if self.hit_paddle(position) is True:
             self.x = 3
-        if self.hit_paddle1(position) == True:
+        if self.hit_paddle1(position) is True:
             self.x = -3
-
-    def hit_paddle(self, position):
-        paddle_position = self.canvas.coords(self, paddle.id)
-        if position[1] >= paddle_position[1] and position[1] <= paddle_position[3]:
-            if position[0] >= paddle_position[0] and position[2] <= paddle_position[2]:
-                return True
-            return False
-
-    def hit_paddle1(self, position):
-        paddle_position = self.canvas.coords(self, paddle1.id)
-        if position[1] >= paddle_position[1] and position[1] <= paddle_position[3]:
-            if position[0] >= paddle_position[0] and position[2] <= paddle_position[2]:
-                return True
-            return False
 
     def score(self, value):
         global counter
         global counter1
 
-        if value == True:
+        if value is True:
             a = self.canvas.create_text(125, 40, text=counter, font=('Arial', 60), fill='white')
             canvas.itemconfig(a, fill='black')
             counter += 1
             a = canvas.create_text(125, 40, text=counter, font=('Arial', 60), fill='white')
 
-        if value == False:
+        if value is False:
             a = self.canvas.create_text(375, 40, text=counter1, font=('Arial', 60), fill='white')
             canvas.itemconfig(a, fill='black')
-            counter += 1
+            counter1 += 1
             a = canvas.create_text(375, 40, text=counter1, font=('Arial', 60), fill='white')
+
 
 class Paddle:
     def __init__(self, canvas, color):
@@ -143,3 +144,17 @@ while True:
     root.update_idletasks()
     root.update()
     time.sleep(0.01)
+    if counter == 10:
+        ball.x = 0
+        ball.y = 0
+        paddle.y = 0
+        paddle1.y = 0
+        canvas.create_text(250, 200, text='Congrats Player 1! You Win!', font=32, fill='red')
+        canvas.create_text(250, 215, text='Score: ' + str(counter) + '-' + str(counter1))
+    if counter1 == 10:
+        ball.x = 0
+        ball.y = 0
+        paddle.y = 0
+        paddle1.y = 0
+        canvas.create_text(250, 200, text='Congrats Player 2! You Win!', font=32, fill='red')
+        canvas.create_text(250, 215, text='Score: ' + str(counter) + '-' + str(counter1))
